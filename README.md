@@ -30,3 +30,11 @@ Kies dus eerst de definitieve URL en vink daarna pas dagen af.
 
 ## Datums later aanpassen
 Open `events.js` op github.com → potloodje → wijzig → **Commit changes**. Binnen een minuut live.
+
+## Toegangscode (gordijntje)
+`gate.js` vraagt eenmalig om een code en onthoudt die in localStorage.
+- Code wijzigen: pas `SECRET` bovenin `gate.js` aan.
+- Eenmalig openen via link: `https://<site>/#k=<code>`
+- Dit is geen echte beveiliging: de code en `events.js` staan in de publieke repo.
+- Op de iPad: eerst **Zet op beginscherm**, dan de app vanaf het beginscherm openen en
+  de code daar invullen. De app op het beginscherm heeft eigen opslag, los van Safari.
