@@ -20,12 +20,16 @@
   const save = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch (e) {} };
 
   // --- events uitrollen naar losse dagen ---
+  // Bij overlap wint het kortste event (een losse dag gaat voor een vakantie),
+  // bij gelijke lengte wint het latere event in de lijst.
   const byDay = {};
   events.forEach((ev) => {
     const first = dayNumber(ev.start), last = dayNumber(ev.end || ev.start);
+    const span = last - first;
     for (let n = first; n <= last; n++) {
       const d = new Date(n * 864e5);
-      byDay[key(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate())] = { ev, isFirst: n === first };
+      const k = key(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+      if (!byDay[k] || span <= byDay[k].span) byDay[k] = { ev, span, isFirst: n === first };
     }
   });
 
