@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Kalender">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Mijn Kalender</title>
+  <style>
+    :root {
+      --bg: #fff8e7;
+      --ink: #2b2d42;
+      --card: #ffffff;
+      --line: #e6dcc3;
+      --accent: #ef476f;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right))
+               max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+      gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .tabs { display: flex; gap: 8px; }
+    .tabs button {
+      font: inherit; font-size: 1.3rem; font-weight: 800; text-transform: capitalize;
+      border: 3px solid var(--line); background: var(--card); color: var(--ink);
+      border-radius: 18px; padding: 8px 20px; cursor: pointer;
+    }
+    .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .next {
+      margin-left: auto; font-size: 1.15rem; font-weight: 700;
+      background: var(--card); border: 3px dashed var(--line); border-radius: 18px; padding: 8px 16px;
+    }
+    .next b { color: var(--accent); }
+
+    .weekdays, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .weekdays div { text-align: center; font-weight: 800; font-size: 1rem; text-transform: uppercase; opacity: .6; }
+    .grid { flex: 1; min-height: 0; grid-auto-rows: 1fr; }
+
+    .day {
+      position: relative; overflow: hidden; min-height: 0;
+      background: var(--card); border: 3px solid var(--line); border-radius: 16px;
+      display: flex; flex-direction: column; padding: 6px 8px;
+    }
+    .day.empty { visibility: hidden; }
+    .day .num { font-size: 1.25rem; font-weight: 800; line-height: 1; }
+    .day.has-event {
+      --c: #999;
+      border-color: var(--c);
+      background: color-mix(in srgb, var(--c) 22%, white);
+    }
+    .icons { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .icons span, .icons img, .icons svg { font-size: clamp(1.6rem, 4.2vw, 3.2rem); line-height: 1; height: clamp(1.6rem, 4.2vw, 3.2rem); width: auto; }
+    .icons svg { width: clamp(1.6rem, 4.2vw, 3.2rem); }
+    .label { font-size: .8rem; font-weight: 800; text-align: center; line-height: 1.1; min-height: 1.1em; }
+
+    .day.today { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); animation: pulse 1.8s ease-in-out infinite; }
+    .day.future { opacity: .85; }
+    .day.done .icons, .day.done .num, .day.done .label { opacity: .35; }
+    .stamp {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      font-size: clamp(3rem, 9vw, 6rem); color: #2a9d4b; font-weight: 900; text-shadow: 0 2px 0 #fff;
+      pointer-events: none;
+    }
+    .day.done .stamp { display: flex; animation: pop .25s ease-out; }
+    .day.nope { animation: shake .35s; }
+
+    @keyframes pulse { 50% { transform: scale(1.03); } }
+    @keyframes pop { from { transform: scale(.2); } 80% { transform: scale(1.2); } }
+    @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+    @media (max-width: 700px) { .label { font-size: .6rem; } .tabs button { font-size: 1rem; padding: 6px 12px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+    <div class="next" id="next"></div>
+  </header>
+  <div class="weekdays"><div>ma</div><div>di</div><div>wo</div><div>do</div><div>vr</div><div>za</div><div>zo</div></div>
+  <main class="grid" id="grid"></main>
+
+  <script src="events.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 76">
+  <!-- Eigen tekening in de stijl van twee vrolijke nar-figuurtjes (niet de officiële Efteling-figuren) -->
+  <g>
+    <path d="M16 42 Q6 14 26 22 Q34 4 42 22 Q62 14 54 42 Z" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="9" cy="17" r="4.5" fill="#ffd166"/><circle cx="34" cy="7" r="4.5" fill="#ffd166"/><circle cx="58" cy="17" r="4.5" fill="#ffd166"/>
+    <circle cx="35" cy="52" r="19" fill="#ffd9b3" stroke="#c98b5a" stroke-width="2"/>
+    <circle cx="28" cy="50" r="2.8" fill="#222"/><circle cx="42" cy="50" r="2.8" fill="#222"/>
+    <circle cx="23" cy="58" r="3.5" fill="#ff8fab" opacity=".7"/><circle cx="47" cy="58" r="3.5" fill="#ff8fab" opacity=".7"/>
+    <path d="M27 58 Q35 68 43 58" fill="none" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <g>
+    <path d="M66 42 Q56 14 76 22 Q84 4 92 22 Q112 14 104 42 Z" fill="#ff5da2" stroke="#c2185b" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="59" cy="17" r="4.5" fill="#ffd166"/><circle cx="84" cy="7" r="4.5" fill="#ffd166"/><circle cx="108" cy="17" r="4.5" fill="#ffd166"/>
+    <circle cx="85" cy="52" r="19" fill="#ffe3c7" stroke="#c98b5a" stroke-width="2"/>
+    <circle cx="78" cy="50" r="2.8" fill="#222"/><circle cx="92" cy="50" r="2.8" fill="#222"/>
+    <circle cx="73" cy="58" r="3.5" fill="#ff8fab" opacity=".7"/><circle cx="97" cy="58" r="3.5" fill="#ff8fab" opacity=".7"/>
+    <path d="M77 58 Q85 68 93 58" fill="none" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>
