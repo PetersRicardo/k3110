@@ -14,10 +14,12 @@ window.CALENDAR = {
 
   events: [
     { start: "2026-10-17", end: "2026-10-25", title: "Herfstvakantie", icons: ["🍂", "🍁"], color: "#f4a259" },
+    { start: "2026-10-18", title: "Opa & Oma van de poesjes", icons: ["👴", "👵", "🐱"], color: "#2ec4b6" },
     { start: "2026-10-26", title: "Studiedag met oma", icons: ["👵", "geenschool"], color: "#8d6cd0" },
     { start: "2026-10-30", title: "Verjaardagsfeestje Eliano", icons: ["🎳", "🍕"], color: "#4cc9f0" },
     { start: "2026-10-31", title: "Verjaardag Eliano", icons: ["🎂", "🎃"], color: "#ff7a00" },
     { start: "2026-11-09", title: "Start Sinterklaasjournaal", icons: ["📺", "mijter"], color: "#d62828" },
+    { start: "2026-11-14", title: "Intocht Sinterklaas", icons: ["🚢", "mijter"], color: "#d62828" },
     { start: "2026-11-19", title: "Papa jarig", icons: ["🎈"], color: "#4361ee" },
     { start: "2026-11-28", title: "Mama jarig", icons: ["🎈"], color: "#f72585" },
     { start: "2026-12-05", title: "Sinterklaasavond", icons: ["mijter", "🌙"], color: "#d62828" },
