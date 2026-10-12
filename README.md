@@ -3,7 +3,7 @@
 Statische kalender voor oktober t/m december 2026. Geen build, geen backend.
 
 - **Datums aanpassen:** `events.js`
-- **Plaatjes:** emoji, `"mijter"`, of een bestand in `img/`
+- **Plaatjes:** emoji, `"mijter"`, `"geenschool"`, of een bestand in `img/`
 - **Lokaal bekijken:** dubbelklik `index.html`
 
 ## Publiceren op GitHub Pages

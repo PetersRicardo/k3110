@@ -14,6 +14,7 @@ window.CALENDAR = {
 
   events: [
     { start: "2026-10-17", end: "2026-10-25", title: "Herfstvakantie", icons: ["🍂", "🍁"], color: "#f4a259" },
+    { start: "2026-10-26", title: "Studiedag met oma", icons: ["👵", "geenschool"], color: "#8d6cd0" },
     { start: "2026-10-30", title: "Verjaardagsfeestje Eliano", icons: ["🎳", "🍕"], color: "#4cc9f0" },
     { start: "2026-10-31", title: "Verjaardag Eliano", icons: ["🎂", "🎃"], color: "#ff7a00" },
     { start: "2026-11-09", title: "Start Sinterklaasjournaal", icons: ["📺", "mijter"], color: "#d62828" },

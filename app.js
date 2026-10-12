@@ -6,6 +6,9 @@
 
   const MIJTER = '<svg viewBox="0 0 64 64" aria-label="mijter"><path d="M14 58 L20 22 Q32 -2 44 22 L50 58 Z" fill="#d62828" stroke="#8d0801" stroke-width="2"/><rect x="14" y="50" width="36" height="8" fill="#ffd166"/><path d="M32 14v22M24 24h16" stroke="#ffd166" stroke-width="5" stroke-linecap="round"/></svg>';
 
+  const GEEN_SCHOOL = '<svg viewBox="0 0 64 64" aria-label="geen school"><polygon points="8,28 32,10 56,28" fill="#c0392b"/><rect x="10" y="28" width="44" height="28" fill="#ffd166" stroke="#b8860b" stroke-width="2"/><rect x="27" y="40" width="10" height="16" fill="#8d5524"/><rect x="15" y="34" width="8" height="8" fill="#8ecae6"/><rect x="41" y="34" width="8" height="8" fill="#8ecae6"/><circle cx="32" cy="32" r="28" fill="none" stroke="#e63946" stroke-width="7"/><line x1="12" y1="52" x2="52" y2="12" stroke="#e63946" stroke-width="7" stroke-linecap="round"/></svg>';
+  const BUILTIN = { mijter: MIJTER, geenschool: GEEN_SCHOOL };
+
   const pad = (n) => String(n).padStart(2, "0");
   const key = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`;
   const dayNumber = (s) => { const [y, m, d] = s.split("-").map(Number); return Date.UTC(y, m - 1, d) / 864e5; };
@@ -27,7 +30,7 @@
   });
 
   function iconHtml(token) {
-    if (token === "mijter") return MIJTER;
+    if (BUILTIN[token]) return BUILTIN[token];
     if (/\.(png|jpe?g|svg|gif|webp)$/i.test(token)) return `<img src="${token}" alt="">`;
     return `<span>${token}</span>`;
   }
@@ -96,7 +99,7 @@
       .filter((e) => (e.end || e.start) >= today)
       .sort((a, b) => (a.start < b.start ? -1 : 1))[0];
     if (!upcoming) { box.textContent = "🎉 Alles is geweest!"; return; }
-    const icon = upcoming.icons.find((i) => i !== "mijter" && !/\.\w+$/.test(i)) || "⭐";
+    const icon = upcoming.icons.find((i) => !BUILTIN[i] && !/\.\w+$/.test(i)) || "⭐";
     if (upcoming.start <= today) { box.innerHTML = `${icon} Nu bezig: <b>${upcoming.title}</b>`; return; }
     const n = dayNumber(upcoming.start) - dayNumber(today);
     box.innerHTML = n === 1
