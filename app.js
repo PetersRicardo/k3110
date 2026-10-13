@@ -20,16 +20,28 @@
   const save = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch (e) {} };
 
   // --- events uitrollen naar losse dagen ---
-  // Bij overlap wint het kortste event (een losse dag gaat voor een vakantie),
-  // bij gelijke lengte wint het latere event in de lijst.
+  // type: "regular" (klein regeltje), "holiday" (vakantie), "priority" (belangrijk).
+  // Per dag bepaalt het hoogste type het uiterlijk van het vakje: priority > holiday.
+  // Bij gelijk type wint het kortste event, bij gelijke lengte het latere in de lijst.
+  // Regular-events komen er als klein regeltje bij, ongeacht wat het vakje verder toont.
+  const RANK = { regular: 0, holiday: 1, priority: 2 };
+  const typeOf = (ev) => (RANK[ev.type] !== undefined ? ev.type : "regular");
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  const keyOf = (n) => { const d = new Date(n * 864e5); return key(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); };
   const byDay = {};
   events.forEach((ev) => {
+    const type = typeOf(ev);
     const first = dayNumber(ev.start), last = dayNumber(ev.end || ev.start);
     const span = last - first;
     for (let n = first; n <= last; n++) {
-      const d = new Date(n * 864e5);
-      const k = key(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
-      if (!byDay[k] || span <= byDay[k].span) byDay[k] = { ev, span, isFirst: n === first };
+      const k = keyOf(n);
+      const day = byDay[k] || (byDay[k] = { primary: null, regulars: [] });
+      if (type === "regular") { day.regulars.push(ev); continue; }
+      const p = day.primary;
+      if (!p || RANK[type] > RANK[p.type] || (RANK[type] === RANK[p.type] && span <= p.span)) {
+        day.primary = { ev, type, span, isFirst: n === first };
+      }
     }
   });
 
@@ -72,16 +84,24 @@
     }
     for (let d = 1; d <= daysInMonth; d++) {
       const k = key(year, current, d);
-      const hit = byDay[k];
+      const day = byDay[k];
+      const p = day && day.primary;
       const el = document.createElement("button");
       el.type = "button";
-      el.className = "day" + (hit ? " has-event" : "") + (k === today ? " today" : "")
-        + (k > today ? " future" : "") + (done[k] ? " done" : "");
-      if (hit) el.style.setProperty("--c", hit.ev.color || "#999");
+      el.className = "day" + (p ? ` has-event ${p.type}` : "") + (p && p.ev.style ? ` ${p.ev.style}` : "")
+        + (k === today ? " today" : "") + (k > today ? " future" : "") + (done[k] ? " done" : "");
+      if (p) el.style.setProperty("--c", p.ev.color || "#999");
+      // vakantie: titel op de eerste zichtbare dag van een reeks (ook na een onderbreking of maandwissel)
+      const prev = byDay[keyOf(dayNumber(k) - 1)];
+      const startsRun = d === 1 || !prev || !prev.primary || (p && prev.primary.ev !== p.ev);
+      const showLabel = p && (p.type === "priority" || startsRun);
       el.innerHTML =
         `<div class="num">${d}</div>` +
-        `<div class="icons">${hit ? hit.ev.icons.map(iconHtml).join("") : ""}</div>` +
-        `<div class="label">${hit && hit.isFirst ? hit.ev.title : ""}</div>` +
+        `<div class="icons">${p ? (p.ev.icons || []).map(iconHtml).join("") : ""}</div>` +
+        `<div class="label">${showLabel ? esc(p.ev.title) : ""}</div>` +
+        (day && day.regulars.length
+          ? `<div class="regs">${day.regulars.map((r) => `<div class="reg">${esc(r.title)}</div>`).join("")}</div>`
+          : "") +
         `<div class="stamp">✓</div>`;
       el.onclick = () => {
         if (k > today) { // toekomst: nog niet afvinken
@@ -99,16 +119,16 @@
   function renderNext() {
     const box = document.getElementById("next");
     const today = todayKey();
-    const upcoming = events
-      .filter((e) => (e.end || e.start) >= today)
-      .sort((a, b) => (a.start < b.start ? -1 : 1))[0];
+    const open = events.filter((e) => (e.end || e.start) >= today)
+      .sort((a, b) => (a.start < b.start ? -1 : 1));
+    const upcoming = open.find((e) => typeOf(e) === "priority") || open.find((e) => typeOf(e) === "holiday");
     if (!upcoming) { box.textContent = "🎉 Alles is geweest!"; return; }
-    const icon = upcoming.icons.find((i) => !BUILTIN[i] && !/\.\w+$/.test(i)) || "⭐";
-    if (upcoming.start <= today) { box.innerHTML = `${icon} Nu bezig: <b>${upcoming.title}</b>`; return; }
+    const icon = (upcoming.icons || []).find((i) => !BUILTIN[i] && !/\.\w+$/.test(i)) || "⭐";
+    if (upcoming.start <= today) { box.innerHTML = `${icon} Nu bezig: <b>${esc(upcoming.title)}</b>`; return; }
     const n = dayNumber(upcoming.start) - dayNumber(today);
     box.innerHTML = n === 1
-      ? `${icon} Morgen: <b>${upcoming.title}</b>!`
-      : `${icon} Nog <b>${n}</b> dagen tot <b>${upcoming.title}</b>`;
+      ? `${icon} Morgen: <b>${esc(upcoming.title)}</b>!`
+      : `${icon} Nog <b>${n}</b> dagen tot <b>${esc(upcoming.title)}</b>`;
   }
 
   function render() { renderTabs(); renderGrid(); renderNext(); }

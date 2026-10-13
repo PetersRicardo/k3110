@@ -69,6 +69,27 @@
     .icons svg { width: clamp(1.6rem, 4.2vw, 3.2rem); }
     .label { font-size: .8rem; font-weight: 800; text-align: center; line-height: 1.1; min-height: 1.1em; }
 
+    .day.priority {
+      border-width: 4px;
+      background: color-mix(in srgb, var(--c) 38%, white);
+      box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 70%, transparent);
+    }
+    .day.priority .label { font-size: .95rem; }
+    .regs { display: flex; flex-direction: column; gap: 1px; margin-top: 2px; }
+    .reg { font-size: .68rem; font-weight: 600; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .reg::before { content: "• "; }
+
+    .day.snow {
+      background-color: color-mix(in srgb, var(--c) 45%, white);
+      background-image: radial-gradient(circle, #fff 0 2px, transparent 3px), radial-gradient(circle, #fff 0 1.5px, transparent 2.5px);
+      background-size: 34px 34px, 23px 23px;
+      background-position: 0 0, 11px 17px;
+      animation: snowfall 6s linear infinite;
+    }
+    .day.snow.today { animation: pulse 1.8s ease-in-out infinite, snowfall 6s linear infinite; }
+    @keyframes snowfall { to { background-position: 0 34px, 11px 40px; } }
+    @media (prefers-reduced-motion: reduce) { .day.snow, .day.snow.today { animation: none; } }
+
     .day.today { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); animation: pulse 1.8s ease-in-out infinite; }
     .day.future { opacity: .85; }
     .day.done .icons, .day.done .num, .day.done .label { opacity: .35; }
@@ -84,7 +105,7 @@
     @keyframes pop { from { transform: scale(.2); } 80% { transform: scale(1.2); } }
     @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
-    @media (max-width: 700px) { .label { font-size: .6rem; } .tabs button { font-size: 1rem; padding: 6px 12px; } }
+    @media (max-width: 700px) { .label, .day.priority .label { font-size: .6rem; } .reg { font-size: .55rem; } .tabs button { font-size: 1rem; padding: 6px 12px; } }
   </style>
 </head>
 <body>

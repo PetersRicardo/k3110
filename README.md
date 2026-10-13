@@ -38,3 +38,7 @@ Open `events.js` op github.com → potloodje → wijzig → **Commit changes**. 
 - Dit is geen echte beveiliging: de code en `events.js` staan in de publieke repo.
 - Op de iPad: eerst **Zet op beginscherm**, dan de app vanaf het beginscherm openen en
   de code daar invullen. De app op het beginscherm heeft eigen opslag, los van Safari.
+
+## Event-types
+Elk event in `events.js` heeft een `type`: `"regular"` (klein regeltje), `"holiday"` (vakantie)
+of `"priority"` (valt het meest op en wint van holiday). Optioneel `style: "snow"` voor sneeuw.
