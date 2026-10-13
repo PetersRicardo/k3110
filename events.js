@@ -26,10 +26,11 @@ window.CALENDAR = {
   recurring: [
     { title: "Zwemles", weekdays: ["ma", "wo"], type: "regular", icons: ["🏊"], except: [] },
     { title: "Logopedie", weekdays: ["wo"], type: "regular", icons: ["🗣️"], except: [] },
-    { title: "Badminton", weekdays: ["vr"], type: "regular", icons: ["🏸"], except: [] },
+    { title: "Badminton", weekdays: ["vr"], type: "regular", icons: ["🏸"], except: ["2026-10-16", "2026-10-30"] },
   ],
 
   events: [
+    { start: "2026-10-16", title: "Schooldisco", type: "priority", icons: ["🪩", "🎵"], color: "#c026d3" },
     { start: "2026-10-17", end: "2026-10-25", title: "Herfstvakantie", type: "holiday", icons: ["🍂", "🍁"], color: "#f4a259" },
     { start: "2026-10-18", title: "Opa & Oma van de poesjes", type: "priority", icons: ["👴", "👵", "🐱"], color: "#2ec4b6" },
     { start: "2026-10-26", title: "Studiedag met oma", type: "priority", icons: ["👵", "geenschool"], color: "#8d6cd0" },
