@@ -25,6 +25,7 @@ window.CALENDAR = {
 
   recurring: [
     { title: "Zwemles", weekdays: ["ma", "wo"], type: "regular", icons: ["🏊"], except: [] },
+    { title: "Logopedie", weekdays: ["wo"], type: "regular", icons: ["🗣️"], except: [] },
   ],
 
   events: [
