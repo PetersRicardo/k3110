@@ -1,5 +1,5 @@
 (function () {
-  const { year, months, events } = window.CALENDAR;
+  const { year, months, events, recurring = [] } = window.CALENDAR;
   const MONTH_NAMES = ["januari", "februari", "maart", "april", "mei", "juni", "juli",
                        "augustus", "september", "oktober", "november", "december"];
   const STORAGE_KEY = "checkoff-" + year;
@@ -29,8 +29,27 @@
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   const keyOf = (n) => { const d = new Date(n * 864e5); return key(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); };
+  // --- terugkerende items uitrollen naar losse events ---
+  // { title, weekdays: ["ma","wo"], from?, to?, except?: ["JJJJ-MM-DD"], type, icons }
+  const WEEKDAYS = { zo: 0, ma: 1, di: 2, wo: 3, do: 4, vr: 5, za: 6 };
+  const rangeFirst = dayNumber(key(year, months[0], 1));
+  const rangeLast = Date.UTC(year, months[months.length - 1], 0) / 864e5; // laatste dag van laatste maand
+  const expanded = [];
+  recurring.forEach((r) => {
+    const days = (r.weekdays || []).map((w) => WEEKDAYS[String(w).toLowerCase()]);
+    const from = Math.max(rangeFirst, r.from ? dayNumber(r.from) : rangeFirst);
+    const to = Math.min(rangeLast, r.to ? dayNumber(r.to) : rangeLast);
+    const skip = new Set(r.except || []);
+    for (let n = from; n <= to; n++) {
+      const k = keyOf(n);
+      if (days.includes(new Date(n * 864e5).getUTCDay()) && !skip.has(k)) {
+        expanded.push({ title: r.title, type: r.type, icons: r.icons, color: r.color, start: k });
+      }
+    }
+  });
+
   const byDay = {};
-  events.forEach((ev) => {
+  events.concat(expanded).forEach((ev) => {
     const type = typeOf(ev);
     const first = dayNumber(ev.start), last = dayNumber(ev.end || ev.start);
     const span = last - first;
@@ -44,6 +63,9 @@
       }
     }
   });
+
+  // klein regeltje: eerste gewone emoji als icoontje, anders een bolletje
+  const regIcon = (r) => (r.icons || []).find((i) => !BUILTIN[i] && !/\.\w+$/.test(i)) || "•";
 
   function iconHtml(token) {
     if (BUILTIN[token]) return BUILTIN[token];
@@ -100,7 +122,7 @@
         `<div class="icons">${p ? (p.ev.icons || []).map(iconHtml).join("") : ""}</div>` +
         `<div class="label">${showLabel ? esc(p.ev.title) : ""}</div>` +
         (day && day.regulars.length
-          ? `<div class="regs">${day.regulars.map((r) => `<div class="reg">${esc(r.title)}</div>`).join("")}</div>`
+          ? `<div class="regs">${day.regulars.map((r) => `<div class="reg">${regIcon(r)} ${esc(r.title)}</div>`).join("")}</div>`
           : "") +
         `<div class="stamp">✓</div>`;
       el.onclick = () => {

@@ -13,9 +13,19 @@
 //   style       : "snow" voor een vakje met vallende sneeuw (optioneel)
 //   color       : kleur van het vakje (optioneel)
 
+// Terugkerende items (hoef je niet per dag op te schrijven), in `recurring` hieronder:
+//   weekdays : ["ma","di","wo","do","vr","za","zo"]
+//   from/to  : eerste/laatste datum (optioneel, standaard de hele kalender)
+//   except   : lijst datums waarop het item NIET plaatsvindt, bijv. ["2026-10-21"]
+//   type/icons/color/title: zoals hierboven
+
 window.CALENDAR = {
   year: 2026,
   months: [10, 11, 12], // oktober t/m december
+
+  recurring: [
+    { title: "Zwemles", weekdays: ["ma", "wo"], type: "regular", icons: ["🏊"], except: [] },
+  ],
 
   events: [
     { start: "2026-10-17", end: "2026-10-25", title: "Herfstvakantie", type: "holiday", icons: ["🍂", "🍁"], color: "#f4a259" },
@@ -29,6 +39,7 @@ window.CALENDAR = {
     { start: "2026-11-28", title: "Mama jarig", type: "priority", icons: ["🎈"], color: "#f72585" },
     { start: "2026-12-05", title: "Sinterklaasavond", type: "priority", icons: ["mijter", "🌙"], color: "#d62828" },
     { start: "2026-12-06", title: "Efteling", type: "priority", icons: ["🎢"], color: "#7b2cbf" },
+    { start: "2026-12-17", end: "2026-12-18", title: "Studiedag", type: "priority", icons: ["geenschool"], color: "#8d6cd0" },
     { start: "2026-12-21", title: "Luciano jarig", type: "priority", icons: ["🎈", "🎂"], color: "#06d6a0" },
     { start: "2026-12-21", end: "2027-01-03", title: "Kerstvakantie", type: "holiday", style: "snow", icons: ["❄️", "⛄"], color: "#5fa8d3" },
     { start: "2026-12-25", end: "2026-12-26", title: "Kerst", type: "priority", icons: ["🎁", "🎄"], color: "#2a9d4b" },
