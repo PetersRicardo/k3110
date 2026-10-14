@@ -30,7 +30,7 @@ window.CALENDAR = {
   ],
 
   events: [
-    { start: "2026-10-14", title: "Kijken in de klas", type: "priority", icons: ["👵", "👩", "school"], color: "#fb8500" },
+    { start: "2026-10-15", title: "Kijken in de klas", type: "priority", icons: ["👵", "👩", "school"], color: "#fb8500" },
     { start: "2026-10-16", title: "Schooldisco", type: "priority", icons: ["🪩", "🎵"], color: "#c026d3" },
     { start: "2026-10-17", end: "2026-10-25", title: "Herfstvakantie", type: "holiday", icons: ["🍂", "🍁"], color: "#f4a259" },
     { start: "2026-10-18", title: "Opa & Oma van de poesjes", type: "priority", icons: ["👴", "👵", "🐱"], color: "#2ec4b6" },
