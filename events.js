@@ -4,7 +4,7 @@
 //   title       : tekst die op de dag staat
 //   icons       : lijst met plaatjes. Mag zijn:
 //                 - een emoji, bijv. "🎈"
-//                 - "mijter" (Sinterklaas-hoed, ingebouwd)
+//                 - "mijter" (Sinterklaas-hoed), "school", "geenschool" (ingebouwd)
 //                 - een bestandsnaam, bijv. "img/jokie-en-jet.png"
 //   type        : "regular"  = klein regeltje, bijna geen versiering
 //                 "holiday"  = vakantie (gekleurd vakje met plaatjes)
@@ -30,10 +30,12 @@ window.CALENDAR = {
   ],
 
   events: [
+    { start: "2026-10-14", title: "Kijken in de klas", type: "priority", icons: ["👵", "👩", "school"], color: "#fb8500" },
     { start: "2026-10-16", title: "Schooldisco", type: "priority", icons: ["🪩", "🎵"], color: "#c026d3" },
     { start: "2026-10-17", end: "2026-10-25", title: "Herfstvakantie", type: "holiday", icons: ["🍂", "🍁"], color: "#f4a259" },
     { start: "2026-10-18", title: "Opa & Oma van de poesjes", type: "priority", icons: ["👴", "👵", "🐱"], color: "#2ec4b6" },
     { start: "2026-10-26", title: "Studiedag met oma", type: "priority", icons: ["👵", "geenschool"], color: "#8d6cd0" },
+    { start: "2026-10-29", title: "Naar school theater, eten op school", type: "priority", icons: ["🎭", "🍽️"], color: "#e76f51" },
     { start: "2026-10-30", title: "Verjaardagsfeestje Eliano", type: "priority", icons: ["🎳", "🍕"], color: "#4cc9f0" },
     { start: "2026-10-31", title: "Verjaardag Eliano", type: "priority", icons: ["🎂", "🎃"], color: "#ff7a00" },
     { start: "2026-11-09", title: "Start Sinterklaasjournaal", type: "priority", icons: ["📺", "mijter"], color: "#d62828" },

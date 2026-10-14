@@ -6,8 +6,11 @@
 
   const MIJTER = '<svg viewBox="0 0 64 64" aria-label="mijter"><path d="M14 58 L20 22 Q32 -2 44 22 L50 58 Z" fill="#d62828" stroke="#8d0801" stroke-width="2"/><rect x="14" y="50" width="36" height="8" fill="#ffd166"/><path d="M32 14v22M24 24h16" stroke="#ffd166" stroke-width="5" stroke-linecap="round"/></svg>';
 
-  const GEEN_SCHOOL = '<svg viewBox="0 0 64 64" aria-label="geen school"><polygon points="8,28 32,10 56,28" fill="#c0392b"/><rect x="10" y="28" width="44" height="28" fill="#ffd166" stroke="#b8860b" stroke-width="2"/><rect x="27" y="40" width="10" height="16" fill="#8d5524"/><rect x="15" y="34" width="8" height="8" fill="#8ecae6"/><rect x="41" y="34" width="8" height="8" fill="#8ecae6"/><circle cx="32" cy="32" r="28" fill="none" stroke="#e63946" stroke-width="7"/><line x1="12" y1="52" x2="52" y2="12" stroke="#e63946" stroke-width="7" stroke-linecap="round"/></svg>';
-  const BUILTIN = { mijter: MIJTER, geenschool: GEEN_SCHOOL };
+  // School: breed gebouw met klokkentoren en vlag (zodat het geen huisje lijkt)
+  const SCHOOL_INNER = '<rect x="2" y="30" width="60" height="6" fill="#8d3b2a"/><rect x="4" y="34" width="56" height="24" fill="#e07a5f" stroke="#8d3b2a" stroke-width="2"/><rect x="24" y="12" width="16" height="20" fill="#e07a5f" stroke="#8d3b2a" stroke-width="2"/><polygon points="21,13 32,3 43,13" fill="#8d3b2a"/><circle cx="32" cy="21" r="5.5" fill="#fff" stroke="#333" stroke-width="1.5"/><path d="M32 17.5V21l3 2" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="12" x2="9" y2="30" stroke="#555" stroke-width="2"/><polygon points="9,12 20,15.5 9,19" fill="#ffd166"/><rect x="8" y="39" width="8" height="8" fill="#ffd166" stroke="#8d3b2a" stroke-width="1.5"/><rect x="19" y="39" width="8" height="8" fill="#ffd166" stroke="#8d3b2a" stroke-width="1.5"/><rect x="37" y="39" width="8" height="8" fill="#ffd166" stroke="#8d3b2a" stroke-width="1.5"/><rect x="48" y="39" width="8" height="8" fill="#ffd166" stroke="#8d3b2a" stroke-width="1.5"/><rect x="27" y="44" width="10" height="14" fill="#5c3d2e"/>';
+  const SCHOOL = `<svg viewBox="0 0 64 64" aria-label="school">${SCHOOL_INNER}</svg>`;
+  const GEEN_SCHOOL = `<svg viewBox="0 0 64 64" aria-label="geen school">${SCHOOL_INNER}<circle cx="32" cy="32" r="28" fill="none" stroke="#e63946" stroke-width="7"/><line x1="12" y1="52" x2="52" y2="12" stroke="#e63946" stroke-width="7" stroke-linecap="round"/></svg>`;
+  const BUILTIN = { mijter: MIJTER, geenschool: GEEN_SCHOOL, school: SCHOOL };
 
   const pad = (n) => String(n).padStart(2, "0");
   const key = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`;
