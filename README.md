@@ -30,6 +30,7 @@ Kies dus eerst de definitieve URL en vink daarna pas dagen af.
 
 ## Datums later aanpassen
 Open `events.js` op github.com → potloodje → wijzig → **Commit changes**. Binnen een minuut live.
+De app kijkt bij elke keer openen (en elk kwartier) of er iets veranderd is en herlaadt dan vanzelf.
 
 ## Toegangscode (gordijntje)
 `gate.js` vraagt eenmalig om een code en onthoudt die in localStorage.

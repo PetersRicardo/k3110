@@ -163,6 +163,27 @@
   let shownDay = todayKey();
   setInterval(() => { if (todayKey() !== shownDay) { shownDay = todayKey(); render(); } }, 60000);
 
+  // --- automatisch verversen ---
+  // Een app op het beginscherm wordt vaak alleen "wakker" gemaakt, niet opnieuw geladen.
+  // Daarom bij openen (en elk kwartier) kijken of de bestanden op de site veranderd zijn;
+  // zo ja, dan herladen. Afgevinkte dagen blijven bewaard (localStorage).
+  const FILES = ["index.html", "gate.js", "events.js", "app.js"];
+  const fingerprint = () => Promise.all(FILES.map((f) =>
+    fetch(f, { cache: "no-store" }).then((r) => { if (!r.ok) throw new Error(f); return r.text(); })
+  )).then((texts) => texts.join("\n"));
+  let baseline = null;
+  const checkForUpdate = () => {
+    if (document.hidden || !location.protocol.startsWith("http")) return;
+    fingerprint().then((fp) => {
+      if (baseline === null) baseline = fp;
+      else if (fp !== baseline) location.reload();
+    }).catch(() => {}); // offline: gewoon de huidige versie houden
+  };
+  checkForUpdate();
+  document.addEventListener("visibilitychange", checkForUpdate);
+  window.addEventListener("pageshow", (e) => { if (e.persisted) checkForUpdate(); });
+  setInterval(checkForUpdate, 15 * 60000);
+
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
