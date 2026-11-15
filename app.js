@@ -25,7 +25,8 @@
   // --- events uitrollen naar losse dagen ---
   // type: "regular" (klein regeltje), "holiday" (vakantie), "priority" (belangrijk).
   // Per dag bepaalt het hoogste type het uiterlijk van het vakje: priority > holiday.
-  // Bij gelijk type wint het kortste event, bij gelijke lengte het latere in de lijst.
+  // Bij gelijk type komt het kortste event eerst, dan (optioneel) het hoogste `weight`, dan de volgorde in de lijst.
+  // Meerdere priority-events op één dag worden allemaal getoond (max. 2, rest als "+n"), elk met eigen iconen.
   // Regular-events komen er als klein regeltje bij, ongeacht wat het vakje verder toont.
   const RANK = { regular: 0, holiday: 1, priority: 2 };
   const typeOf = (ev) => (RANK[ev.type] !== undefined ? ev.type : "regular");
@@ -58,13 +59,20 @@
     const span = last - first;
     for (let n = first; n <= last; n++) {
       const k = keyOf(n);
-      const day = byDay[k] || (byDay[k] = { primary: null, regulars: [] });
+      const day = byDay[k] || (byDay[k] = { primaries: [], regulars: [] });
       if (type === "regular") { day.regulars.push(ev); continue; }
-      const p = day.primary;
-      if (!p || RANK[type] > RANK[p.type] || (RANK[type] === RANK[p.type] && span <= p.span)) {
-        day.primary = { ev, type, span, isFirst: n === first };
-      }
+      day.primaries.push({ ev, type, span });
     }
+  });
+  const MAX_SLOTS = 2;
+  Object.values(byDay).forEach((day) => {
+    day.primaries.sort((a, b) => RANK[b.type] - RANK[a.type] || a.span - b.span || (b.ev.weight || 0) - (a.ev.weight || 0));
+    const top = day.primaries[0];
+    // alleen het hoogste type telt; vakantie-reeksen die overlappen blijven één vakje
+    const same = top ? day.primaries.filter((p) => p.type === top.type) : [];
+    day.shown = top && top.type === "priority" ? same.slice(0, MAX_SLOTS) : same.slice(0, 1);
+    day.more = top && top.type === "priority" ? same.length - day.shown.length : 0;
+    day.primary = top || null;
   });
 
   // klein regeltje: eerste gewone emoji als icoontje, anders een bolletje
@@ -111,19 +119,26 @@
       const k = key(year, current, d);
       const day = byDay[k];
       const p = day && day.primary;
+      const multi = day && day.shown && day.shown.length > 1;
       const el = document.createElement("button");
       el.type = "button";
-      el.className = "day" + (p ? ` has-event ${p.type}` : "") + (p && p.ev.style ? ` ${p.ev.style}` : "")
+      el.className = "day" + (p ? ` has-event ${p.type}` : "") + (multi ? " multi" : "") + (p && p.ev.style ? ` ${p.ev.style}` : "")
         + (k === today ? " today" : "") + (k > today ? " future" : "") + (done[k] ? " done" : "");
       if (p) el.style.setProperty("--c", p.ev.color || "#999");
       // vakantie: titel op de eerste zichtbare dag van een reeks (ook na een onderbreking of maandwissel)
       const prev = byDay[keyOf(dayNumber(k) - 1)];
       const startsRun = d === 1 || !prev || !prev.primary || (p && prev.primary.ev !== p.ev);
       const showLabel = p && (p.type === "priority" || startsRun);
+      const slot = (s) =>
+        `<div class="slot" style="--c:${esc(s.ev.color || "#999")}">` +
+        `<div class="icons">${(s.ev.icons || []).map(iconHtml).join("")}</div>` +
+        `<div class="label">${esc(s.ev.title)}</div></div>`;
       el.innerHTML =
         `<div class="num">${d}</div>` +
-        `<div class="icons">${p ? (p.ev.icons || []).map(iconHtml).join("") : ""}</div>` +
-        `<div class="label">${showLabel ? esc(p.ev.title) : ""}</div>` +
+        (multi
+          ? `<div class="slots">${day.shown.map(slot).join("")}</div>` + (day.more ? `<div class="more">+${day.more}</div>` : "")
+          : `<div class="icons">${p ? (p.ev.icons || []).map(iconHtml).join("") : ""}</div>` +
+            `<div class="label">${showLabel ? esc(p.ev.title) : ""}</div>`) +
         (day && day.regulars.length
           ? `<div class="regs">${day.regulars.map((r) => `<div class="reg">${regIcon(r)} ${esc(r.title)}</div>`).join("")}</div>`
           : "") +
@@ -148,12 +163,15 @@
       .sort((a, b) => (a.start < b.start ? -1 : 1));
     const upcoming = open.find((e) => typeOf(e) === "priority") || open.find((e) => typeOf(e) === "holiday");
     if (!upcoming) { box.textContent = "🎉 Alles is geweest!"; return; }
+    // alle events van hetzelfde type die op dezelfde startdag beginnen ("A én B")
+    const group = open.filter((e) => e.start === upcoming.start && typeOf(e) === typeOf(upcoming));
+    const names = group.map((e) => `<b>${esc(e.title)}</b>`).join(" én ");
     const icon = (upcoming.icons || []).find((i) => !BUILTIN[i] && !/\.\w+$/.test(i)) || "⭐";
-    if (upcoming.start <= today) { box.innerHTML = `${icon} Nu bezig: <b>${esc(upcoming.title)}</b>`; return; }
+    if (upcoming.start <= today) { box.innerHTML = `${icon} Nu bezig: ${names}`; return; }
     const n = dayNumber(upcoming.start) - dayNumber(today);
     box.innerHTML = n === 1
-      ? `${icon} Morgen: <b>${esc(upcoming.title)}</b>!`
-      : `${icon} Nog <b>${n}</b> dagen tot <b>${esc(upcoming.title)}</b>`;
+      ? `${icon} Morgen: ${names}!`
+      : `${icon} Nog <b>${n}</b> dagen tot ${names}`;
   }
 
   function render() { renderTabs(); renderGrid(); renderNext(); }
